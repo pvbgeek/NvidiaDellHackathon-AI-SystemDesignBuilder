@@ -3,7 +3,6 @@ from openai import OpenAI
 from flask import Flask, request, jsonify, render_template
 from dotenv import load_dotenv
 
-
 # Loading .env file
 load_dotenv()
 
@@ -16,6 +15,9 @@ api_key = os.getenv('API_KEY')
 client = OpenAI(api_key=api_key)
 
 app = Flask(__name__)
+
+# Define base URL for AI Workbench
+base_url = '/projects/NvidiaDellHackathon-AI-SystemDesignBuilder/applications/AI-System-Design-Builder'
 
 def generate_system_design(user_input):
     components = [
@@ -65,12 +67,14 @@ def generate_system_design(user_input):
         print("An exception occurred:", str(e))
         return {"error": f"An error occurred: {str(e)}"}
 
-@app.route('/')
+@app.route(f'{base_url}/')
+@app.route('/')  # Keep this for local development
 def home():
-    # Serve index.html from the templates directory
-    return render_template('index.html')
+    # Pass base_url to template
+    return render_template('index.html', base_url=base_url)
 
-@app.route('/generate', methods=['POST'])
+@app.route(f'{base_url}/generate', methods=['POST'])
+@app.route('/generate', methods=['POST'])  # Keep this for local development
 def generate_design():
     try:
         # Extract user input from the request
@@ -90,4 +94,5 @@ def generate_design():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
+    # Enable CORS and run the app
     app.run(host='0.0.0.0', port=5000, debug=True)

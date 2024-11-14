@@ -1,5 +1,8 @@
 // URL of the Flask endpoint (adjust host and port as needed)
-const apiUrl = 'http://127.0.0.1:5000/generate';
+const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
+
+// URL of the Flask endpoint with base URL prefix
+const apiUrl = `${baseUrl}/generate`;
 
 // DOM elements
 const sendButton = document.getElementById('send-button');

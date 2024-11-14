@@ -103,7 +103,7 @@ execution:
       port: "5000"
       proxy:
         trim_prefix: false
-      url: http://localhost:5000
+      url: http://0.0.0.0:5000
   resources:
     gpu:
       requested: 0
