@@ -33,6 +33,7 @@ async function fetchGraphJson(userInput) {
     } catch (error) {
         console.error("Error fetching graph JSON:", error);
         setLoadingState(false);
+        alert('Error: Could not generate system design. Please try again.');
     }
 }
 
