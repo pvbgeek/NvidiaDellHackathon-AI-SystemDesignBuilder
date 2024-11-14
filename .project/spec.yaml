@@ -87,7 +87,23 @@ environment:
       name: ""
       target: ""
 execution:
-  apps: []
+  apps:
+  - name: AI-System-Design-Builder
+    type: custom
+    class: webapp
+    start_command: python main.py
+    health_check_command: curl -f http://localhost:5000 || exit 1
+    stop_command: pkill -f "python main.py"
+    user_msg: ""
+    logfile_path: ""
+    timeout_seconds: 60
+    icon_url: ""
+    webapp_options:
+      autolaunch: false
+      port: "5000"
+      proxy:
+        trim_prefix: false
+      url: http://localhost:5000
   resources:
     gpu:
       requested: 0

@@ -1,1 +1,4 @@
 jupyterlab>3.0
+python-dotenv
+Flask
+openai
