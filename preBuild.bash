@@ -6,5 +6,5 @@
 
 #!/bin/bash
 echo "Installing requirements..."
-pip install -r code/webapp/requirements.txt
+python3 -m pip install -r requirements.txt
 echo "Setup completed successfully!"

@@ -5,9 +5,5 @@
 # Note: This file may be removed if you don't need to use it
 
 #!/bin/bash
-echo "Starting the application..."
-python main.py &
-echo "Waiting for application to start..."
-sleep 5
-echo "Opening browser..."
-xdg-open http://localhost:5000
+echo "Build completed successfully!"
+echo "You can now start the application from the Applications tab."
