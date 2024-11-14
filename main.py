@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify, render_template, send_from_directory
 from dotenv import load_dotenv
 
 # Loading .env file
-load_dotenv()
+load_dotenv('variables.env')
 
 # Storing API Key from .env file
 api_key = os.getenv('API_KEY')
