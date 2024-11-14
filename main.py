@@ -1,12 +1,11 @@
 import json
+import os
 from openai import OpenAI
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from dotenv import load_dotenv
 
 # Loading .env file
 load_dotenv()
-
-import os
 
 # Storing API Key from .env file
 api_key = os.getenv('API_KEY')
@@ -14,10 +13,18 @@ api_key = os.getenv('API_KEY')
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
-app = Flask(__name__)
-
 # Define base URL for AI Workbench
 base_url = '/projects/NvidiaDellHackathon-AI-SystemDesignBuilder/applications/AI-System-Design-Builder'
+
+app = Flask(__name__, 
+    static_folder='static',
+    template_folder='templates')
+
+# Add this route for serving static files
+@app.route(f'{base_url}/static/<path:filename>')
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('static', filename)
 
 def generate_system_design(user_input):
     components = [
@@ -68,31 +75,24 @@ def generate_system_design(user_input):
         return {"error": f"An error occurred: {str(e)}"}
 
 @app.route(f'{base_url}/')
-@app.route('/')  # Keep this for local development
+@app.route('/')
 def home():
-    # Pass base_url to template
     return render_template('index.html', base_url=base_url)
 
 @app.route(f'{base_url}/generate', methods=['POST'])
-@app.route('/generate', methods=['POST'])  # Keep this for local development
+@app.route('/generate', methods=['POST'])
 def generate_design():
     try:
-        # Extract user input from the request
         data = request.json
         user_input = data.get('userInput', '')
         if not user_input:
             return jsonify({"error": "No user input provided."}), 400
 
-        # Generate system design JSON
         result = generate_system_design(user_input)
-
-        # Return the result as JSON response
         return jsonify(result), 200
 
     except Exception as e:
-        # Return error if any occurs
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    # Enable CORS and run the app
     app.run(host='0.0.0.0', port=5000, debug=True)
