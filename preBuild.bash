@@ -3,3 +3,8 @@
 # before any system packages or programming language specific package have been installed.
 #
 # Note: This file may be removed if you don't need to use it
+
+#!/bin/bash
+echo "Installing requirements..."
+pip install -r code/webapp/requirements.txt
+echo "Setup completed successfully!"
