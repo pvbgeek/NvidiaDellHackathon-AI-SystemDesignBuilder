@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 load_dotenv('variables.env')
 
 # Storing API Key from .env file
-api_key = os.getenv("API_key")
-print(api_key)
+api_key = os.getenv("API_KEY")
+print("Loaded API Key:", api_key)
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
