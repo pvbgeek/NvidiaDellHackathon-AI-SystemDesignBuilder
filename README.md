@@ -22,8 +22,9 @@ Before running this project, make sure you have the following installed:
 
 1. **Set Up NVIDIA AI Workbench**:
     - Follow the [Installation guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/overview.html) to set up the Workbench on your local machine or cloud environment.
+    - Select either local device location or remote server.
     
-    ![](img/image.png)
+    ![](img/1.png)
    
 2. **Select Clone Project Option**
 
