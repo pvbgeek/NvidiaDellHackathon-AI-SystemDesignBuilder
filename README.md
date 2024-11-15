@@ -14,7 +14,6 @@ Before running this project, make sure you have the following installed:
 
 - **NVIDIA AI Workbench**: [Installation guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/overview.html)
 - **Python 3.8+**
-- **CUDA Toolkit** (for GPU acceleration)
 - **Docker** (for containerized environments)
 
 
