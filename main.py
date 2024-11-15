@@ -5,15 +5,17 @@ from openai import OpenAI
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
+from crypto_helper import decrypt_api_key
 
 # Loading environment variables
+load_dotenv('.env.encrypted')
 
-# Debug print for environment variables
+# Get and decrypt API key
+encrypted_api_key = os.getenv('ENCRYPTED_API_KEY')
+api_key = decrypt_api_key(encrypted_api_key) if encrypted_api_key else None
+
 print("Checking for API key in environment...")
-api_key = os.getenv('API_KEY')
-# Remove any potential whitespace from the API key
 if api_key:
-    api_key = api_key.strip()
     print(f"First 5 characters of API key: {api_key[:5]}")
     print(f"API key length: {len(api_key)}")
     if not api_key.startswith('sk-'):

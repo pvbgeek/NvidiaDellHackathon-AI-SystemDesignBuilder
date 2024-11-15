@@ -3,3 +3,4 @@ python-dotenv
 Flask
 openai
 flask-cors
+cryptography
