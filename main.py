@@ -6,14 +6,19 @@ from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 
-# Loading .env file
+# Loading environment variables
 load_dotenv()
 
-# Storing API Key from .env file
+# Debug print for environment variables
+print("Checking for API key in environment...")
 api_key = os.getenv('API_KEY')
-print(f"API Key present: {'Yes' if api_key else 'No'}")
+if api_key:
+    print("API key found in environment")
+    print(f"API key length: {len(api_key)} characters")
+else:
+    print("WARNING: API key not found!")
 
-# Initialize the OpenAI client
+# Initialize the OpenAI client with the API key
 client = OpenAI(api_key=api_key)
 
 # Define base URL for AI Workbench
@@ -21,6 +26,19 @@ base_url = '/projects/NvidiaDellHackathon-AI-SystemDesignBuilder/applications/AI
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route(f'{base_url}/test-api')
+@app.route('/test-api')
+def test_api():
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": "test"}],
+            max_tokens=5
+        )
+        return jsonify({"status": "success", "message": "API key is working"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
 @app.route(f'{base_url}/static/<path:filename>')
 @app.route('/static/<path:filename>')
