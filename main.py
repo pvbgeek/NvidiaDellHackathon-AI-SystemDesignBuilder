@@ -12,20 +12,33 @@ load_dotenv()
 # Debug print for environment variables
 print("Checking for API key in environment...")
 api_key = os.getenv('API_KEY')
+# Remove any potential whitespace from the API key
 if api_key:
-    print("API key found in environment")
-    print(f"API key length: {len(api_key)} characters")
-else:
-    print("WARNING: API key not found!")
-
+    api_key = api_key.strip()
+    print(f"First 5 characters of API key: {api_key[:5]}")
+    print(f"API key length: {len(api_key)}")
+    if not api_key.startswith('sk-'):
+        print("WARNING: API key doesn't start with 'sk-'")
 # Initialize the OpenAI client with the API key
-client = OpenAI(api_key=api_key)
+client = OpenAI(
+    api_key=api_key
+)
 
 # Define base URL for AI Workbench
 base_url = '/projects/NvidiaDellHackathon-AI-SystemDesignBuilder/applications/AI-System-Design-Builder'
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/api-info')
+def api_info():
+    if api_key:
+        return jsonify({
+            "key_length": len(api_key),
+            "starts_with_sk": api_key.startswith('sk-'),
+            "first_5_chars": api_key[:5]
+        })
+    return jsonify({"error": "No API key found"})
 
 @app.route(f'{base_url}/test-api')
 @app.route('/test-api')
