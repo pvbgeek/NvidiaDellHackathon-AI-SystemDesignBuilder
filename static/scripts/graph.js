@@ -277,7 +277,7 @@ function getRandomPosition(max, elementSize) {
     return Math.floor(Math.random() * (max - elementSize - 20)) + 10;
 }*/
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////
 // Select the main window where components will be placed
 const graphWindow = document.getElementById('graph-window');
 
