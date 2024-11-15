@@ -108,7 +108,9 @@ execution:
     gpu:
       requested: 0
     sharedMemoryMB: 0
-  secrets: []
+  secrets:
+  - variable: API_KEY
+    description: openai API key.
   mounts:
   - type: project
     target: /project/
