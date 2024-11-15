@@ -7,7 +7,6 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 # Loading environment variables
-load_dotenv('variables.env')
 
 # Debug print for environment variables
 print("Checking for API key in environment...")
