@@ -1,8 +1,9 @@
 import json
 import os
+import traceback  # Add this import
 from openai import OpenAI
-from flask import Flask, request, jsonify, render_template, send_from_directory
-from flask_cors import CORS  # Add this import
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 from dotenv import load_dotenv
 
 # Loading .env file
@@ -10,23 +11,25 @@ load_dotenv()
 
 # Storing API Key from .env file
 api_key = os.getenv('API_KEY')
+if not api_key:
+    print("WARNING: OpenAI API key not found in environment variables!")
 
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
-# Define base URL for AI Workbench
-base_url = '/projects/NvidiaDellHackathon-AI-SystemDesignBuilder/applications/AI-System-Design-Builder'
-
-app = Flask(__name__, 
-    static_url_path=f'{base_url}/static',
-    static_folder='static',
-    template_folder='templates')
-
-# Enable CORS
+app = Flask(__name__)
 CORS(app)
 
+base_url = '/projects/NvidiaDellHackathon-AI-SystemDesignBuilder/applications/AI-System-Design-Builder'
+
 def generate_system_design(user_input):
+    if not api_key:
+        print("Error: No API key available")
+        return {"error": "OpenAI API key not configured"}, 500
+
     try:
+        print(f"Starting generate_system_design with input: {user_input}")
+        
         components = [
             "API gateway", "Message queue", "CDN", "DNS", "Firewall", "Auth server",
             "Load balancer", "Server", "Client", "Cache", "Database", "Cloud"
@@ -54,6 +57,7 @@ def generate_system_design(user_input):
         Ensure the output is a valid JSON array. Do not include any explanations, only the JSON array.
         """
         
+        print("Sending request to OpenAI...")
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
@@ -64,17 +68,20 @@ def generate_system_design(user_input):
             max_tokens=1000
         )
         
+        print("Received response from OpenAI")
         adjacency_list_str = response.choices[0].message.content.strip()
-        # Verify the response is a valid JSON array
+        print(f"OpenAI response: {adjacency_list_str}")
+        
         adjacency_list = json.loads(adjacency_list_str)
         if not isinstance(adjacency_list, list):
             raise ValueError("Response is not a valid array")
-            
+        
         return adjacency_list
-    
+        
     except Exception as e:
         print(f"Error in generate_system_design: {str(e)}")
-        return jsonify({"error": f"Error generating system design: {str(e)}"}), 500
+        print(f"Traceback: {traceback.format_exc()}")
+        return {"error": f"An error occurred: {str(e)}"}, 500
 
 @app.route(f'{base_url}/')
 @app.route('/')
@@ -85,22 +92,27 @@ def home():
 @app.route('/generate', methods=['POST'])
 def generate_design():
     try:
+        print("Received generate request")
         data = request.get_json()
         if not data or 'userInput' not in data:
             return jsonify({"error": "No user input provided"}), 400
 
         user_input = data['userInput']
+        print(f"Processing user input: {user_input}")
+        
         result = generate_system_design(user_input)
         
-        # Verify result is a list before sending
-        if isinstance(result, list):
-            return jsonify(result)
-        else:
-            return result  # This will be the error response
+        # Check if result is a tuple containing error response
+        if isinstance(result, tuple):
+            return jsonify(result[0]), result[1]
+        
+        return jsonify(result)
 
     except Exception as e:
         print(f"Error in generate_design: {str(e)}")
-        return jsonify({"error": f"Server error: {str(e)}"}), 500
+        print(f"Traceback: {traceback.format_exc()}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
+    print(f"Starting Flask app with API key {'configured' if api_key else 'NOT CONFIGURED'}")
     app.run(host='0.0.0.0', port=5000, debug=True)
