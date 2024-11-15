@@ -99,7 +99,7 @@ execution:
     timeout_seconds: 60
     icon_url: ""
     webapp_options:
-      autolaunch: false
+      autolaunch: true
       port: "5000"
       proxy:
         trim_prefix: false
